@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Atlantic Basin Hurricanes</title>
+        <!--Use the line below to link to the latest version of D3-->
+        <!--<script src="https://d3js.org/d3.v5.min.js"></script>-->
+        <link rel="stylesheet" href="leaflet/leaflet.css"/>
+        <script src="leaflet/leaflet.js"></script>
+        <script type="text/javascript" src="d3.js"></script>
+    <style>
+    #header {grid-area: header;}
+    #slider {grid-area: slider;}
+    #map {grid-area: map;}
+    #comments {grid-area: comments;}
+    #footer {grid-area: footer;}
+    #grid-container {
+        display: grid;
+        grid-template-areas:
+            'header header'
+            'slider slider'
+            'map comments'
+            'footer footer'
+    }
+    
+    div {
+        font-family: Times, serif;
+    }
+    
+    .EX_0 {fill: rgb(214, 219, 223);}
+    .LO_0 {fill: rgb(214, 219, 223);}
+    .SD_0 {fill: rgb(52, 73, 94);}
+    .SS_0 {fill: rgb(52, 73, 94);}
+    .TD_0 {fill: rgb(33, 47, 60);}
+    .TS_0 {fill: rgb(33, 47, 60);}
+    .HU_1 {fill: rgb(155, 89, 182);}
+    .HU_2 {fill: rgb(155, 89, 182);}
+    .HU_3 {fill: rgb(155, 89, 182);}
+    .HU_4 {fill: rgb(192, 57, 43);}
+    .HU_5 {fill: rgb(192, 57, 43);}
+    a {color:#006699;}
+    ul {line-height: 150%;}
+    </style>
+    </head>
+    <body>
+    <div id="grid-container">
+        <div id="header" style="padding:10px">
+            <h1 style="color:#006699">2018 Atlantic Hurricane Season</h1>
+            Move the slider to watch the hurricane season evolve.
+        </div>
+        <div id="slider"></div>
+        <div id="map" style="width: 1000px; height: 600px"></div>
+        <div id="comments" style="padding: 10px"></div>
+        <script type="text/javascript" src="hurricanes.js"></script>
+        <div id="footer" style="padding:10px">Data Source: <a href="https://www.nhc.noaa.gov/data/tcr/index.php?season=2018&basin=atl" target="_blank">National Hurricane Center</a>/NOAA
+    </div>
+    </body>
+</html>
