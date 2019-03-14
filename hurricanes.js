@@ -180,14 +180,43 @@ d3.json("2018/AL2018.json").then(function(pts) {
     }
 
     //Create template for hurricane track points
-    var track_points=svg.selectAll("circle")
+    var track_points=svg.append("g")
+                        .attr("class","track-points")
+                        .selectAll("circle")
                         .data(pts.features)
                         .enter()
                         .append("circle")
                         .style("stroke","black")
                         .attr("class",function(d) {return d.properties.STORMTYPE+"_"+d.properties.SS;});
     
+    //Calculate total number of storms in GeoJSON file (season)
+    var maxStorms=d3.max(pts.features,function(d) {return d.properties.STORMNUM;});
+    //Create line function
+    var line=d3.line()
+               .x(function(d) {
+                   var coord=[d.geometry.coordinates[1],d.geometry.coordinates[0]]
+                   return map.latLngToLayerPoint(coord).x;
+                })
+               .y(function(d) {
+                   var coord=[d.geometry.coordinates[1],d.geometry.coordinates[0]]
+                   return map.latLngToLayerPoint(coord).y;
+                });
+    
     var updatePoints=function() {
+        //Draw path lines up to the slider date
+        for (var i=1;i<=maxStorms;i++) {
+            var storm=pts.features.filter(function(d) {
+                if (d.properties.STORMNUM==i && d.properties.DATE<=sliderTime) {return d;}
+            });
+            svg.append("g")
+                .attr("class","track-path")
+                .append("path")
+                .datum(storm)
+                .attr("d",line)
+                .style("fill","none")
+                .style("stroke","black");
+        }
+        
         track_points.attr("cx",function(d) {
                         var coord=[d.geometry.coordinates[1],d.geometry.coordinates[0]]
                         return map.latLngToLayerPoint(coord).x;
@@ -197,7 +226,7 @@ d3.json("2018/AL2018.json").then(function(pts) {
                         return map.latLngToLayerPoint(coord).y;
                         })
                     .attr("r",map.getZoom())
-                    //.attr("pointer-events","none")
+                    .attr("pointer-events","none")
                     .style("opacity",0)
                     .on("mouseover",function(d) {
                         d3.select(this).style("opacity",1)
@@ -257,8 +286,19 @@ d3.json("2018/AL2018.json").then(function(pts) {
         var new_lat=map.getCenter().lat-startCenter.lat;
         var new_long=map.getCenter().lng-startCenter.lng;
         var move_tooltip=map.latLngToLayerPoint([new_lat,new_long]);
-        console.log(move_tooltip);
-        tooltip.style("tranform","translate("+move_tooltip.x+","+move_tooltip.y+")");
+        console.log(d3.select(this).attr("cx")-move_tooltip.x);
+        track_points.on("mouseover",function(d) {
+                        d3.select(this).style("opacity",1)
+                                       .attr("r",2*map.getZoom());
+                        tooltip.style("opacity",1)
+                               .style("border", "solid")
+                               .style("border-width", "2px")
+                               .style("border-radius", "5px")
+                               .style("left",(d3.select(this).attr("cx")-move_tooltip.x)+"px")
+                               .style("top",(d3.select(this).attr("cy")-move_tooltip.y)+"px")
+                               .style("pointer-events","none")
+                               .html("<b>"+d.properties.STORMTYPE+" "+d.properties.STORMNAME+"</b><br>Atlantic Basin<br>"+d.properties.YEAR+" Storm No. "+d.properties.STORMNUM+"<br><b>"+formatDate(d.properties.DATE)+"</b><br>Category: "+d.properties.SS+"<br>Wind Speed(kt): "+d.properties.INTENSITY+"<br>Latitude: "+d.properties.LAT+"<br>Longitude: "+d.properties.LON);
+                    })
     };
     
     //Call hurricane points and add to map
@@ -266,6 +306,6 @@ d3.json("2018/AL2018.json").then(function(pts) {
     
     //Update points when map is zoomed or dragged
     map.on("moveend",updatePoints);
-    map.on("dragstart",captureCenter);
-    map.on("drag",fixTooltip);
+    //map.on("dragstart",captureCenter);
+    //map.on("drag",fixTooltip);
 })
