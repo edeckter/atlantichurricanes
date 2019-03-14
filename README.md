@@ -1,4 +1,4 @@
-# atlantichurricanes
+# 2018 Atlantic Basin Hurricane Map
 This repository has d3.js code for an interactive map of the 2018 Atlantic basin hurricane season.
 
 Created using leaflet and OpenStreetMap.
