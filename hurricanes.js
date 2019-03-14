@@ -28,8 +28,8 @@ var tooltip=d3.select("#map")
             .style("z-index", "999");
             
 //Initial comment text
-var comment1="Hurricane season in the Atlantic basin officially runs from June 1st through November 30th.  The 2018 Atlantic basin hurricane season got started a little early, with the first Tropical Storm initially forming on May 25th."
-var comment2="The season had 15 named storms, 8 of which because hurricanes.  Two of the hurricanes (Florence and Michael) were considered major hurricanes (hurricanes that achieved a Category 4 or 5 status).  This is above the average of 11 named storms, 6 hurricanes and 2 major hurricanes."
+var comment1="Hurricane season in the Atlantic basin officially runs from June 1st through November 30th.  The 2018 Atlantic basin hurricane season got started a little early, with the first tropical storm initially forming on May 25th."
+var comment2="The season had 15 named storms, 8 of which because hurricanes.  Two of the hurricanes (Florence and Michael) were considered major hurricanes (hurricanes that achieved a Category 4 or 5 status).  This is above the average season of 11 named storms, 6 hurricanes and 2 major hurricanes."
             
 //Add map legend
 var legend=d3.select("#map")
@@ -242,7 +242,7 @@ d3.json("2018/AL2018.json").then(function(pts) {
                 .style("fill","none")
                 .style("stroke","black");
         }
-        console.log(center_position);
+        
         track_points.attr("cx",function(d) {
                         var coord=[d.geometry.coordinates[1],d.geometry.coordinates[0]]
                         return map.latLngToLayerPoint(coord).x;
@@ -255,18 +255,16 @@ d3.json("2018/AL2018.json").then(function(pts) {
                     .attr("pointer-events","none")
                     .style("opacity",0)
                     .on("mouseover",function(d) {
-                        console.log(d3.select(this).attr("cx"));
-                        console.log(d3.select(this).attr("cy"));
                         d3.select(this).style("opacity",1)
                                        .attr("r",2*map.getZoom());
                         tooltip.style("opacity",1)
                                .style("border", "solid")
                                .style("border-width", "2px")
                                .style("border-radius", "5px")
-                               .style("left",(parseInt(d3.select(this).attr("cx"))-(center_position.x-map_width/2))+"px")
-                               .style("top",(parseInt(d3.select(this).attr("cy"))-(center_position.y-map_height/2))+"px")
+                               .style("left",(parseInt(d3.select(this).attr("cx"))-(center_position.x-map_width/2)+20)+"px")
+                               .style("top",(parseInt(d3.select(this).attr("cy"))-(center_position.y-map_height/2)-10)+"px")
                                .style("pointer-events","none")
-                               .html("<b>"+d.properties.STORMTYPE+" "+d.properties.STORMNAME+"</b><br>Atlantic Basin<br>"+d.properties.YEAR+" Storm No. "+d.properties.STORMNUM+"<br><b>"+formatDate(d.properties.DATE)+"</b><br>Category: "+d.properties.SS+"<br>Wind Speed(kt): "+d.properties.INTENSITY+"<br>Latitude: "+d.properties.LAT+"<br>Longitude: "+d.properties.LON);
+                               .html("<b>"+d.properties.STORMTYPE+" "+d.properties.STORMNAME+"</b><br>Atlantic Basin<br>"+d.properties.YEAR+" Storm No. "+d.properties.STORMNUM+"<br><b>"+formatDate(d.properties.DATE)+"</b><br>Category: "+d.properties.SS+"<br>Wind Speed (kt): "+d.properties.INTENSITY+"<br>Latitude: "+d.properties.LAT+"<br>Longitude: "+d.properties.LON);
                     })
                     .on("mouseout",function(d) {
                         d3.select(this).style("opacity",0.8)
@@ -283,7 +281,7 @@ d3.json("2018/AL2018.json").then(function(pts) {
         var info=d3.select("#comments");
         info.select("html").remove();
 
-        var info_text=comment1+"<br><br>"+comment2+"<br><br><span style='font-weight:bold;color:#006699;'>2018 Hurricane Season Milestones:</span>";
+        var info_text=comment1+"<br><br>"+comment2+"<br><br><span style='font-weight:bold;color:#006699;'>2018 Hurricane Season Highlights:</span>";
         if (sliderTime>=seasonMinDate) {info_text=info_text+("<ul><li>May 25: Tropical Storm Alberto forms east of the Yucatan Peninsula</li>");}
         if (sliderTime>=new Date("2018 05 28")) {info_text=info_text+("<li>May 28: Tropical Storm Alberto makes landfall on the Florida panhandle</li>");}
         if (sliderTime>=new Date("2018 07 06")) {info_text=info_text+("<li>July 6: Beryl reaches hurricane status</li>");}
