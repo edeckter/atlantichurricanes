@@ -207,7 +207,7 @@ d3.json("2018/AL2018.json").then(function(pts) {
                 })
                .y(function(d) {
                    var coord=[d.geometry.coordinates[1],d.geometry.coordinates[0]]
-                   return map.latLngToContainerPoint(coord).y;
+                   return map.latLngToLayerPoint(coord).y;
                 });
     
     var updatePoints=function() {
