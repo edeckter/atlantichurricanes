@@ -294,38 +294,9 @@ d3.json("2018/AL2018.json").then(function(pts) {
             .html(info_text);        
     };
     
-    //Fix tooltip positioning on map drag
-    var startCenter;
-    var captureCenter=function() {
-        startCenter=map.getCenter();
-    }
-    
-    var fixTooltip=function() {
-        console.log(startCenter);
-        //console.log(map.getCenter());
-        var new_lat=map.getCenter().lat-startCenter.lat;
-        var new_long=map.getCenter().lng-startCenter.lng;
-        var move_tooltip=map.latLngToLayerPoint([new_lat,new_long]);
-        console.log(d3.select(this).attr("cx")-move_tooltip.x);
-        track_points.on("mouseover",function(d) {
-                        d3.select(this).style("opacity",1)
-                                       .attr("r",2*map.getZoom());
-                        tooltip.style("opacity",1)
-                               .style("border", "solid")
-                               .style("border-width", "2px")
-                               .style("border-radius", "5px")
-                               .style("left",(d3.select(this).attr("cx")-move_tooltip.x)+"px")
-                               .style("top",(d3.select(this).attr("cy")-move_tooltip.y)+"px")
-                               .style("pointer-events","none")
-                               .html("<b>"+d.properties.STORMTYPE+" "+d.properties.STORMNAME+"</b><br>Atlantic Basin<br>"+d.properties.YEAR+" Storm No. "+d.properties.STORMNUM+"<br><b>"+formatDate(d.properties.DATE)+"</b><br>Category: "+d.properties.SS+"<br>Wind Speed(kt): "+d.properties.INTENSITY+"<br>Latitude: "+d.properties.LAT+"<br>Longitude: "+d.properties.LON);
-                    })
-    };
-    
     //Call hurricane points and add to map
     updatePoints();
     
     //Update points when map is zoomed or dragged
     map.on("moveend",updatePoints);
-    //map.on("dragstart",captureCenter);
-    //map.on("drag",fixTooltip);
 })
