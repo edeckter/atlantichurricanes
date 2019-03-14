@@ -112,6 +112,7 @@ legend_svg.append("text")
 //Format date
 var formatDate=d3.timeFormat("%a %b %d %I:%M %p");
 var sliderDate=d3.timeFormat("%b %d");
+var mapDate=d3.timeFormat("%A %B %d");
 
 //Read in GeoJSON with hurricane location data
 d3.json("2018/AL2018.json").then(function(pts) {
@@ -119,7 +120,6 @@ d3.json("2018/AL2018.json").then(function(pts) {
     //Add parsed date to .properties object within pts.features for each point
     for (var i=0; i<storm.length; i++) {
         storm[i].properties.DATE=new Date(storm[i].properties.MONTH+' '+storm[i].properties.DAY+' '+storm[i].properties.YEAR+' '+storm[i].properties.HHMM.substring(0,2)+':00');
-        //storm[i].properties.LatLong=new L.LatLng(storm[i].geometry.coordinates[0],storm[i].geometry.coordinates[1]);
     }
     
     var seasonMinDate=d3.min(storm,function(d) {return d.properties.DATE;});
@@ -199,10 +199,27 @@ d3.json("2018/AL2018.json").then(function(pts) {
                 })
                .y(function(d) {
                    var coord=[d.geometry.coordinates[1],d.geometry.coordinates[0]]
-                   return map.latLngToLayerPoint(coord).y;
+                   return map.latLngToContainerPoint(coord).y;
                 });
     
     var updatePoints=function() {
+        console.log(map.getCenter());
+        var center_position=map.latLngToLayerPoint(map.getCenter());
+        console.log(center_position);
+        //Remove previous date
+        svg.selectAll(".date").remove();
+        //Display current date in corner of map
+        svg.append("text")
+           .attr("class","date")
+           .text(mapDate(sliderTime))
+           .attr("x",center_position.x)
+           .attr("y",center_position.y-290)
+           .style("font-weight","bold")
+           .style("font-size","16px")
+           .style("color","black")
+           .attr("text-anchor","middle")
+          .attr("dominant-baseline","central");
+        
         //Remove all previous paths
         svg.selectAll(".track-path").remove();
         //Draw path lines up to the slider date
