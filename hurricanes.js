@@ -1,3 +1,11 @@
+//Size map
+var map_width=1000;
+var map_height=600;
+
+d3.select("#map")
+  .style("width",map_width+"px")
+  .style("height",map_height+"px")
+          
 //Create leaflet basemap using OpenStreet Maps
 var map = L.map('map').setView([32.3078, -64.7505], 3);
 mapLink = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -212,7 +220,7 @@ d3.json("2018/AL2018.json").then(function(pts) {
            .attr("class","date")
            .text(mapDate(sliderTime))
            .attr("x",center_position.x)
-           .attr("y",center_position.y-290)
+           .attr("y",center_position.y-(map_height/2-10))
            .style("font-weight","bold")
            .style("font-size","16px")
            .style("color","black")
@@ -255,8 +263,8 @@ d3.json("2018/AL2018.json").then(function(pts) {
                                .style("border", "solid")
                                .style("border-width", "2px")
                                .style("border-radius", "5px")
-                               .style("left",(parseInt(d3.select(this).attr("cx"))-(center_position.x-500))+"px")
-                               .style("top",(parseInt(d3.select(this).attr("cy"))-(center_position.y-300))+"px")
+                               .style("left",(parseInt(d3.select(this).attr("cx"))-(center_position.x-map_width/2))+"px")
+                               .style("top",(parseInt(d3.select(this).attr("cy"))-(center_position.y-map_height/2))+"px")
                                .style("pointer-events","none")
                                .html("<b>"+d.properties.STORMTYPE+" "+d.properties.STORMNAME+"</b><br>Atlantic Basin<br>"+d.properties.YEAR+" Storm No. "+d.properties.STORMNUM+"<br><b>"+formatDate(d.properties.DATE)+"</b><br>Category: "+d.properties.SS+"<br>Wind Speed(kt): "+d.properties.INTENSITY+"<br>Latitude: "+d.properties.LAT+"<br>Longitude: "+d.properties.LON);
                     })
