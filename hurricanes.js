@@ -203,9 +203,8 @@ d3.json("2018/AL2018.json").then(function(pts) {
                 });
     
     var updatePoints=function() {
-        console.log(map.getCenter());
+        //Get center position for map (used to calculate offsets for fixed position elements)
         var center_position=map.latLngToLayerPoint(map.getCenter());
-        console.log(center_position);
         //Remove previous date
         svg.selectAll(".date").remove();
         //Display current date in corner of map
@@ -235,7 +234,7 @@ d3.json("2018/AL2018.json").then(function(pts) {
                 .style("fill","none")
                 .style("stroke","black");
         }
-        
+        console.log(center_position);
         track_points.attr("cx",function(d) {
                         var coord=[d.geometry.coordinates[1],d.geometry.coordinates[0]]
                         return map.latLngToLayerPoint(coord).x;
@@ -248,14 +247,16 @@ d3.json("2018/AL2018.json").then(function(pts) {
                     .attr("pointer-events","none")
                     .style("opacity",0)
                     .on("mouseover",function(d) {
+                        console.log(d3.select(this).attr("cx"));
+                        console.log(d3.select(this).attr("cy"));
                         d3.select(this).style("opacity",1)
                                        .attr("r",2*map.getZoom());
                         tooltip.style("opacity",1)
                                .style("border", "solid")
                                .style("border-width", "2px")
                                .style("border-radius", "5px")
-                               .style("left",(d3.select(this).attr("cx"))+"px")
-                               .style("top",(d3.select(this).attr("cy"))+"px")
+                               .style("left",(parseInt(d3.select(this).attr("cx"))-(center_position.x-500))+"px")
+                               .style("top",(parseInt(d3.select(this).attr("cy"))-(center_position.y-300))+"px")
                                .style("pointer-events","none")
                                .html("<b>"+d.properties.STORMTYPE+" "+d.properties.STORMNAME+"</b><br>Atlantic Basin<br>"+d.properties.YEAR+" Storm No. "+d.properties.STORMNUM+"<br><b>"+formatDate(d.properties.DATE)+"</b><br>Category: "+d.properties.SS+"<br>Wind Speed(kt): "+d.properties.INTENSITY+"<br>Latitude: "+d.properties.LAT+"<br>Longitude: "+d.properties.LON);
                     })
