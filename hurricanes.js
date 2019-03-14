@@ -203,6 +203,8 @@ d3.json("2018/AL2018.json").then(function(pts) {
                 });
     
     var updatePoints=function() {
+        //Remove all previous paths
+        svg.selectAll(".track-path").remove();
         //Draw path lines up to the slider date
         for (var i=1;i<=maxStorms;i++) {
             var storm=pts.features.filter(function(d) {
